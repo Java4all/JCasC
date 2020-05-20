@@ -1,0 +1,39 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: jenkins-x
+  namespace: jcasc
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: jenkins-x
+    spec:
+      securityContext:
+        runAsUser: 1000
+        fsGroup: 2000
+      containers:
+      - name: sir-jenkins
+        image: javaforever/jcasc:v5
+        env:
+        - name: JAVA_OPTS
+          value: -Djenkins.install.runSetupWizard=false
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+          - name: jenkinshome-pv-volume
+            mountPath: /var/jenkins_home
+          - name: jcasc-config
+            mountPath: /var/jenkins_home/jenkins.yaml
+            subPath: jenkins.yaml
+      volumes:
+        - name: jcasc-config
+          configMap:
+            name: jcasc-configmap
+            items:
+              - key: jenkins.yaml
+                path: jenkins.yaml
+        - name: jenkinshome-pv-volume
+          persistentVolumeClaim:
+              claimName: jenkinshome-pv-claim

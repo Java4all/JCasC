@@ -1,0 +1,109 @@
+jenkins:
+  systemMessage: Welcome to our CI\CD server.  This Jenkins is configured and managed 'as code'.
+
+  numExecutors: 1
+  mode: NORMAL
+  scmCheckoutRetryCount: 3
+  labelString: "master-label"  
+
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+       - id: admin
+         password: ${adminpw:-passw0rd}
+       - id: jenslave
+         password: "*3hd#sdh"
+       - id: jenkins-slave
+         password: "*3hd#sdh"
+
+  authorizationStrategy:
+    projectMatrix:
+      permissions:
+        - "View/Delete:authenticated"
+        - "View/Read:authenticated"
+        - "View/Configure:authenticated"
+        - "View/Create:authenticated"
+        - "Job/Read:authenticated"
+        - "Job/Build:authenticated"
+        - "Job/Configure:authenticated"
+        - "Job/Create:authenticated"
+        - "Job/Delete:authenticated"
+        - "Job/Discover:authenticated"
+        - "Job/Move:authenticated"
+        - "Job/Workspace:authenticated"
+        - "Job/Cancel:authenticated"
+        - "Run/Delete:authenticated"
+        - "Run/Replay:authenticated"
+        - "Run/Update:authenticated"
+        - "SCM/Tag:authenticated"
+        - "Overall/Read:anonymous"
+        - "Overall/Administer:authenticated"
+  
+  crumbIssuer: "standard"
+
+  remotingSecurity:
+     enabled: true
+  nodes:
+   - permanent:
+       labelString: "linux docker slave"
+       mode: NORMAL
+       name: "python-node"
+       remoteFS: "/home/jenslave"
+       launcher:
+         jnlp:
+           workDirSettings:
+             disabled: true
+             failIfWorkDirIsMissing: false
+             internalDir: "remoting"
+             workDirPath: "/tmp"
+  slaveAgentPort: 50000  
+
+credentials:
+  system:
+    domainCredentials:
+      - credentials:
+        - usernamePassword:
+            scope:    GLOBAL
+            id:       github-user
+            username: java4all
+            password: ${github:-githubPassw0rd}
+            description: github username/password
+        - gitLabApiTokenImpl:
+            scope: SYSTEM
+            id: gitlab_token
+            apiToken: ${GlUserToken}
+            description: "Gitlab Token"
+        - usernamePassword:
+            scope: GLOBAL
+            id: gitlabuser
+            username: ${GlUserName}
+            password: ${GlUserToken} #Load from Environment Variable
+            description: ${GlUserName} for GL
+        - usernamePassword:
+            scope: GLOBAL
+            id: dockerhub
+            username: ${DHuser}
+            password: ${DHtoken} #Load from Environment Variable
+            description: ${DHuser} for GL
+
+
+jobs:
+  - url: https://raw.githubusercontent.com/Java4all/job-dsl-collection/master/config-rotator-plugin-dsl/config-rotator-build-pipeline.dsl #casc
+  - url: https://raw.githubusercontent.com/Java4all/job-dsl-collection/master/python-dsl/pipeline.dsl #casc
+ 
+tool:
+  git:
+    installations:
+      - name: Default
+        home: "git"
+
+unclassified:
+  simple-theme-plugin:
+    elements:
+    - cssUrl:
+        url: "https://cdn.rawgit.com/afonsof/jenkins-material-theme/gh-pages/dist/material-blue.css"
+  location:
+    url: http://localhost:8080
+    adminAddress: support_cloud@atos.net
+  

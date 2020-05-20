@@ -1,0 +1,4 @@
+export GlUserToken='GitLab User Token'
+export GlUserName='GitLab User Name'
+export DHuser='DockerHub User'
+export DHtoken="DockerHub Token"
