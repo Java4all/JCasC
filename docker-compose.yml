@@ -29,6 +29,35 @@ services:
     - jenkins-worker:/var/jenkins_home/worker
     - /var/run/docker.sock:/var/run/docker.sock
 
+  grafana:
+    image: grafana/grafana
+    ports: 
+      - 3000:3000
+    environment:
+      GF_INSTALL_PLUGINS: "grafana-clock-panel,grafana-simple-json-datasource,btplc-trend-box-panel,grafana-piechart-panel"
+    user: "0"
+    links:
+      - influxdb
+    volumes:
+    - ./grafana-storage:/var/lib/grafana
+
+  influxdb:
+    image: influxdb:latest
+    container_name: influxdb
+    ports:
+      - "8083:8083"
+      - "8086:8086"
+      - "8090:8090"
+    environment:
+      INFLUXDB_DB: jendata
+
+    volumes:
+      # Data persistency
+      # sudo mkdir -p /srv/docker/influxdb/data
+      - ./influxdb/data:/var/lib/influxdb
+  
+
 volumes:
   jenkins_home:
   jenkins-worker:
+  grafana-storage:

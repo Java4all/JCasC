@@ -6,3 +6,6 @@
 gke/Skip to content
 source
 .source.swp
+influxdb
+grafana-storage
+env.influxdb
