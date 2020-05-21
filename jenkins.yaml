@@ -13,9 +13,9 @@ jenkins:
        - id: admin
          password: ${adminpw:-passw0rd}
        - id: jenslave
-         password: ${jenpw:-"*3hd#sdh"}
+         password: ${jenpw:-*3hd#sdh}
        - id: jenkins-slave
-         password: ${jensl:-"*3hd#sdh"}
+         password: ${jensl:-*3hd#sdh}
 
   authorizationStrategy:
     projectMatrix:
