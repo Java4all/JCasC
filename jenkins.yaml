@@ -89,7 +89,7 @@ credentials:
 
 
 jobs:
-  - url: https://raw.githubusercontent.com/Java4all/job-dsl-collection/master/config-rotator-plugin-dsl/config-rotator-build-pipeline.dsl #casc
+  #- url: https://raw.githubusercontent.com/Java4all/job-dsl-collection/master/config-rotator-plugin-dsl/config-rotator-build-pipeline.dsl #casc
   - url: https://raw.githubusercontent.com/Java4all/job-dsl-collection/master/python-dsl/pipeline.dsl #casc
  
 tool:

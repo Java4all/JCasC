@@ -1,0 +1,28 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: jenkins-slave
+  namespace: jcasc
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: jenkins-slave
+    spec:
+      securityContext:
+        runAsUser: 1000
+        fsGroup: 109
+      containers:
+      - name: sir-jenkins-agent
+        image: javaforever/jenslave:latest
+        env:
+        - name: JAVA_OPTS
+          value: -Xmx2048m
+        volumeMounts:
+          - name: dockersock
+            mountPath: /var/run/docker.sock
+      volumes:
+        - name: dockersock
+          hostPath:
+              path: /var/run/docker.sock
